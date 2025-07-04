@@ -21,6 +21,49 @@ class Field {
     this.field = field;
   }
 
+  static generateField(depth, width, holesCount) {
+    const matrix = Array.from({ length: depth }, () =>
+      Array(width).fill(fieldCharacter)
+    );
+
+    let addedHoles = 0;
+    while (addedHoles < holesCount) {
+      const row = Math.floor(Math.random() * depth);
+      const col = Math.floor(Math.random() * width);
+
+      if (matrix[row][col] === fieldCharacter) {
+        matrix[row][col] = hole;
+        addedHoles++;
+      }
+    }
+
+    let isPlayerSpawned = false;
+    while (!isPlayerSpawned) {
+      const row = Math.floor(Math.random() * depth);
+      const col = Math.floor(Math.random() * width);
+
+      if (matrix[row][col] === fieldCharacter) {
+        matrix[row][col] = pathCharacter;
+        isPlayerSpawned = true;
+      }
+    }
+
+    let isHatPlaced = false;
+    while (!isHatPlaced) {
+      const row = Math.floor(Math.random() * depth);
+      const col = Math.floor(Math.random() * width);
+
+      if (matrix[row][col] === fieldCharacter) {
+        matrix[row][col] = hat;
+        isHatPlaced = true;
+      }
+    }
+
+    const field = new Field(matrix);
+
+    return field;
+  }
+
   print() {
     for (let row of this.field) {
       console.log(row.join(""));
@@ -28,11 +71,7 @@ class Field {
   }
 }
 
-const myField = new Field([
-  ["*", "░", "O"],
-  ["░", "O", "░"],
-  ["░", "^", "░"],
-]);
+const myField = Field.generateField(5, 5, 3);
 
 while (true) {
   myField.print();
